@@ -1,0 +1,383 @@
+
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+
+int sparse(int a[20][20],int m,int n,int b[100][3]);
+int accept(int a[20][20],int m,int n,int b[100][3]);
+int display(int a[20][20],int m,int n,int b[100][3]);
+int simpletranspose(int a[20][20],int m,int n,int b[100][3]);
+int fasttranspose(int a[20][20],int m,int n,int b[100][3]);
+int addsparse(int a[20][20],int m,int n,int b1[100][3],int c[20][20],int x,int y,int b2[100][3] );
+int main()
+{
+  int a[20][20],b[100][3],c[20][20],d[100][3];
+  int m,n,x,y,g;
+
+
+do
+{
+
+printf("\nEnter choice :\n1.Enter the 1st matrix : \n2.display the matrix : \n3.sparse matrix is : \n4.simple transpose is : \n5.fast transpose matrix is : \n6.Addition of two sparse matrix : \n7.Exit \n");
+scanf("%d",&g);
+
+switch(g)
+{
+
+    case 1:printf("enter the rows and columns");
+          scanf("%d%d",&m,&n);
+          accept(a,m,n,b);
+          break;
+    case 2:display(a,m,n,b);
+           break;
+    case 3:sparse(a,m,n,b);
+            break;
+    case 4:simpletranspose(a,m,n,b);
+            break;
+    case 5:fasttranspose(a,m,n,b);
+            break;
+   case 6: printf("enter the rows and columns 0f second  matrix");
+           scanf("%d%d",&x,&y);
+           accept(c,x,y,d);
+           sparse(c,x,y,d);
+           addsparse(a,m,n,b,c,x,y,d);
+            break;
+   case 7: return 0;
+
+}
+}while(g!=7);
+}
+
+
+
+int accept(int a[20][20],int m,int n,int b[100][3])
+{
+  printf("enter the value of matrix : \n");
+  for(int i=0;i<m;i++)
+  {
+      for(int j=0;j<n;j++)
+      {
+         scanf("%d",&a[i][j]);
+      }
+  }
+}
+
+  int display(int a[20][20],int m,int n,int b[100][3])
+{
+  printf("\n\nthe matrix is : \n");
+  for(int i=0;i<m;i++)
+  {
+      for(int j=0;j<n;j++)
+      {
+         printf("%d\t",a[i][j]);
+      }
+      printf("\n");
+  }
+  printf("\n\n");
+}
+
+int sparse(int a[20][20],int m,int n,int b[100][3])
+{
+   int k=1;
+   b[0][0]=m;
+   b[0][1]=n;
+   for(int i=0;i<m;i++)
+   {
+       for(int j=0;j<n;j++)
+       {
+
+           if(a[i][j]!=0)
+           {
+               b[k][0]=i;
+               b[k][1]=j;
+               b[k][2]=a[i][j];
+               k++;
+           }
+       }
+   }
+    b[0][2]=k-1;
+printf("the sparse matrix is : \n");
+for(int i=0;i<k;i++)
+  {
+      for(int j=0;j<3;j++)
+      {
+         printf("%d\t",b[i][j]);
+      }
+  printf("\n");
+}
+}
+
+
+int simpletranspose(int a[20][20],int m,int n,int b[100][3])
+{
+int c[100][3];
+int l=1;
+int k=b[0][2]+1;
+   c[0][0]=n;
+   c[0][1]=m;
+   c[0][2]=k-1;
+for(int i=0;i<n;i++)
+{
+
+    for(int j=1;j<k;j++)
+    {
+        if(b[j][1]==i)
+        {
+            c[l][0]=b[j][1];
+            c[l][1]=b[j][0];
+            c[l][2]=b[j][2];
+            l++;
+
+        }
+    }
+}
+printf("\n");
+printf("the simpletranspose sparse matrix is : \n");
+for(int i=0;i<k;i++)
+  {
+      for(int j=0;j<3;j++)
+      {
+         printf("%d\t",c[i][j]);
+      }
+  printf("\n");
+  }
+}
+int fasttranspose(int a[20][20],int m,int n,int b[100][3])
+
+{
+    int count[100]={0};
+    int index[100]={0};
+    int k=b[0][2];
+    for(int i=0;i<n;i++)
+    {
+        for(int j=1;j<=k;j++)
+        {
+           if(b[j][1]==i)
+           {
+               count[i]++;
+
+           }
+        }
+    }
+    index[0]=1;
+    for(int i=1;i<=n;i++)
+    {
+       index[i]=index[i-1]+count[i-1];
+    }
+printf("\n\n");
+int c[100][3];
+int l=1;
+   c[0][0]=n;
+   c[0][1]=m;
+   c[0][2]=k;
+   for(int i=0;i<n;i++)
+{
+
+    for(int j=1;j<=k;j++)
+    {
+        if(b[j][1]==i)
+        {
+            c[index[i]][0]=b[j][1];
+            c[index[i]][1]=b[j][0];
+            c[index[i]][2]=b[j][2];
+            index[i]++;
+
+        }
+    }
+}
+  printf("the fasttranspose matrix is : \n");
+for(int i=0;i<=k;i++)
+  {
+      for(int j=0;j<3;j++)
+      {
+         printf("%d\t",c[i][j]);
+      }
+  printf("\n");
+  }
+
+
+
+
+}
+
+int addsparse(int a[20][20],int m,int n,int b1[100][3],int c[20][20],int x,int y,int b2[100][3] )
+{
+    int s,r,b3[100][3];
+
+
+   int w=b1[0][2];
+   printf("\n\n");
+   printf("the 1st sparse matrix is : \n");
+for(int i=0;i<=w;i++)
+  {
+      for(int j=0;j<3;j++)
+      {
+         printf("%d\t",b1[i][j]);
+      }
+  printf("\n\n");
+
+
+}
+printf("\n\n\n");
+int p=b2[0][2];
+printf("the 2nd sparse matrix is : \n");
+for(int i=0;i<=p;i++)
+  {
+      for(int j=0;j<3;j++)
+      {
+         printf("%d\t",b2[i][j]);
+      }
+printf("\n\n");
+  }
+
+  printf("the addition two matrix : \n\n");
+
+
+int t1,t2,i,j,k;
+
+if(b1[0][0]!=b2[0][0]||b1[0][1]!=b2[0][1])
+    {
+
+printf("\nYou have entered invalid matrix!!Size must be equal");
+
+exit(0);
+    }
+
+t1=b1[0][2];
+
+t2=b2[0][2];
+
+i=j=k=0;
+
+b3[0][0]=b1[0][0];
+
+b3[0][1]=b1[0][1];
+
+while(i<=t1&&j<=t2)
+    {
+
+if(b1[i][0]<b2[j][0])
+
+
+{
+
+b3[k][0]=b1[i][0];
+
+b3[k][1]=b1[i][1];
+
+b3[k][2]=b1[i][2];
+
+k++;
+
+i++;
+
+}
+
+else if(b2[j][0]<b1[i][0])
+
+
+{
+
+b3[k][0]=b2[j][0];
+
+b3[k][1]=b2[j][1];
+
+b3[k][2]=b2[j][2];
+
+    k++;
+
+j++;
+
+}
+
+else if(b1[i][1]<b2[j][1])
+
+
+{
+
+b3[k][0]=b1[i][0];
+
+b3[k][1]=b1[i][1];
+
+b3[k][2]=b1[i][2];
+
+k++;
+
+i++;
+        }
+
+else if(b2[j][1]<b1[i][1])
+
+{
+
+b3[k][0]=b2[j][0];
+
+b3[k][1]=b2[j][1];
+
+b3[k][2]=b2[j][2];
+
+k++;
+
+j++;
+
+}
+
+else
+
+{
+
+b3[k][0]=b1[i][0];
+
+b3[k][1]=b1[i][1];
+
+b3[k][2]=b1[i][2]+b2[j][2];
+
+k++;
+
+i++;
+
+j++;
+
+}
+    }
+
+while(i<=t1)        //copy
+
+    {
+
+b3[k][0]=b1[i][0];
+
+b3[k][1]=b1[i][1];
+
+b3[k][2]=b1[i][2];
+
+i++;
+
+k++;
+    }
+
+while(j<=t2)        //copy
+    {
+
+b3[k][0]=b2[j][0];
+
+b3[k][1]=b1[j][1];
+
+b3[k][2]=b1[j][2];
+
+j++;
+
+k++;
+    }
+
+b3[0][2]=k-1;
+for(int i=0;i<k;i++)
+  {
+      for(int j=0;j<3;j++)
+      {
+         printf("%d\t",b3[i][j]);
+      }
+  printf("\n\n");
+}
+}
